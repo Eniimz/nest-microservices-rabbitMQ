@@ -1,8 +1,9 @@
-import { Injectable, UnprocessableEntityException } from "@nestjs/common";
+import { Injectable, UnauthorizedException, UnprocessableEntityException } from "@nestjs/common";
 import { CreateUserRequest } from "./dtos/create-user-request";
 import { UsersRepositry } from "./users.repositry";
-import { User } from "./schemas/user.schema";
+import { User, UserSchema } from "./schemas/user.schema";
 import * as bcrypt from 'bcrypt'
+import { throwError } from "rxjs";
 
 @Injectable()
 export class UsersService {
@@ -15,7 +16,7 @@ export class UsersService {
 
         const user = await this.usersRespositry.create({
             ...request,
-            passowrd: await bcrypt.hash(request.password, 10)
+            password: await bcrypt.hash(request.password, 10)
         })
 
         return user
@@ -36,6 +37,28 @@ export class UsersService {
 
         if(user){
             throw new UnprocessableEntityException('Email already exists')
+        }
+
+    }
+
+
+    async validateUser(email: string, password: string) {
+
+        try{
+            const user = await this.usersRespositry.findOne({ email })
+
+            const passwordIsValid = await bcrypt.compare(password, user.password)
+
+            if(!passwordIsValid){
+                throw new UnauthorizedException('Credentials are not valid')
+            }
+
+            // const { passwor, ...rest } = user
+
+            return user
+
+        }catch(err){
+
         }
 
     }
