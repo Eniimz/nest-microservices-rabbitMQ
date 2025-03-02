@@ -8,7 +8,7 @@ export class User extends AbstractDocument {
     email: string
 
     @Prop()
-    passowrd: string
+    password: string
 }
 
 
