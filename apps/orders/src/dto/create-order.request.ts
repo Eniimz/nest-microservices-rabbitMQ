@@ -10,6 +10,6 @@ export class CreateOrderRequest {
     @IsPositive()
     price: string
 
-    @IsPhoneNumber()
+    // @IsPhoneNumber()
     phoneNumber: string
 }

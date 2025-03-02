@@ -1,9 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateOrderRequest } from './dto/create-order.request';
 import { OrdersRepositry } from './orders.repositry.controller';
 import { updateOrderRequest } from './dto/update-order-request';
 import { ClientProxy, EventPattern } from '@nestjs/microservices';
 import { BILLING_SERVICE } from './constants/services';
+import { Order } from './schemas/order.schema';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class OrdersService {
@@ -12,6 +14,8 @@ export class OrdersService {
     protected ordersRepositry: OrdersRepositry,
     @Inject(BILLING_SERVICE) private billingClient: ClientProxy
   ){}
+
+  private logger = new Logger(OrdersService.name)
 
   getOrders() {
 
@@ -29,9 +33,13 @@ export class OrdersService {
 
       const order = await this.ordersRepositry.create(orderData, {})
 
-      this.billingClient.emit('order_created', {
-        orderData
-      })
+      this.logger.log("Emiting the order created event")
+
+      await lastValueFrom(
+        this.billingClient.emit('order_created', {
+          orderData
+        })
+      ) 
 
       return order
 

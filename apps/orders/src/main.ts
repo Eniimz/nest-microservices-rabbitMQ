@@ -7,7 +7,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe())
 
   const configService = app.get(ConfigService)
-  console.log("The config service: ", configService)
+  // console.log("The config service: ", configService)
   await app.listen(configService.get('PORT') ?? 3000)
 }
 bootstrap();
