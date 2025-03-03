@@ -63,4 +63,9 @@ export class UsersService {
 
     }
 
+
+    async getUser(getUserArgs: Partial<User>) {
+        return await this.usersRespositry.findOne({ getUserArgs })
+    }
+
 }

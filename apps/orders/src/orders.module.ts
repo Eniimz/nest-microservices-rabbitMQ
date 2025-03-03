@@ -9,6 +9,7 @@ import { Order, OrderSchema } from './schemas/order.schema';
 import { OrdersRepositry } from './orders.repositry.controller';
 import { RmqModule } from '@app/common/rmq/rmq.module';
 import { BILLING_SERVICE } from './constants/services';
+import { AuthModule } from '@app/common/auth/auth.module';
 
 
 @Module({
@@ -22,6 +23,7 @@ import { BILLING_SERVICE } from './constants/services';
     }),
     DatabaseModule,
     RmqModule.register({ name: BILLING_SERVICE }),
+    AuthModule,
     MongooseModule.forFeature([{ name: Order.name, schema: OrderSchema }]) //for registering the model schema
   ],
   controllers: [OrdersController],
