@@ -15,13 +15,16 @@ export class RmqService {
             queue: this.configService.get<string>(`RABBIT_MQ_${queue}_QUEUE`),
             noAck,
             persistent: true,
+            // queueOptions: {
+            //   durable: true
+            // }
           },
         };
       }
     
       ack(context: RmqContext) {
         const channel = context.getChannelRef()
-        const originalMessage = channel.getMessage()
+        const originalMessage = context.getMessage()
         channel.ack(originalMessage)
       }
 

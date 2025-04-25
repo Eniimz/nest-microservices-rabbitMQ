@@ -3,7 +3,6 @@ import { CreateUserRequest } from "./dtos/create-user-request";
 import { UsersRepositry } from "./users.repositry";
 import { User, UserSchema } from "./schemas/user.schema";
 import * as bcrypt from 'bcrypt'
-import { throwError } from "rxjs";
 
 @Injectable()
 export class UsersService {
@@ -20,7 +19,6 @@ export class UsersService {
         })
 
         return user
-
     }
 
 
@@ -65,7 +63,7 @@ export class UsersService {
 
 
     async getUser(getUserArgs: Partial<User>) {
-        return await this.usersRespositry.findOne({ getUserArgs })
+        return await this.usersRespositry.findOne(getUserArgs)
     }
 
 }

@@ -14,17 +14,22 @@ export class AuthController {
 
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard) //the checking if user exists and password validation is done throgh here
+  @UseGuards(LocalAuthGuard) //the checking if user exists and password validation is done through here
   @Post('login')
   async login(
     @CurrentUser() user: User,
-    @Res({ passthrough: true }) response: Response//passsthrough: true => gives us the usual nestjs response structure
+    @Res({ passthrough: true }) response: Response//passthrough: true => gives us the usual nestjs response structure
   ) {
     await this.authService.login(user, response);
     response.send(user)
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @Get()
+  testCheck() {
+    return "working in auth controller"
+  }
+
+  @UseGuards(JwtAuthGuard)
   @MessagePattern('validate_user')
   async validateUser(data: any) {
     this.logger.log("Received the message, for validating, now validating")

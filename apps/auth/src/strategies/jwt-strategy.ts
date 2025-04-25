@@ -11,10 +11,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     protected logger = new Logger(JwtStrategy.name)
 
+
     constructor(
         configService: ConfigService,
         protected usersService: UsersService
     ){
+        
         super({
             jwtFromRequest: ExtractJwt.fromExtractors([
                 (request: any) => {

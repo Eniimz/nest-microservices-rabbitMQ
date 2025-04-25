@@ -4,6 +4,7 @@ import { BillingService } from './billing.service';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { RmqModule } from '@app/common/rmq/rmq.module';
+import { AuthModule } from '@app/common/auth/auth.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { RmqModule } from '@app/common/rmq/rmq.module';
       }),
       envFilePath: './apps/billing/.env'
     }),
+    AuthModule,
     RmqModule,
 
   ],
