@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build orders
+RUN npm run build auth
 
 
 FROM node:alpine As production
@@ -26,4 +26,4 @@ COPY . .
 
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD [ "node", "dist/apps/orders/main" ]
+CMD [ "node", "dist/apps/auth/main" ]

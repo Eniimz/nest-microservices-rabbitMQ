@@ -4,9 +4,11 @@ import { RmqService } from '@app/common/rmq/rmq.service';
 import { ValidationPipe } from '@nestjs/common';
 import { RmqOptions } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import * as cookieParser from "cookie-parser"
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
+  // app.use(cookieParser)      for some reason this stops the service api from getting hit
   const rmqService = app.get<RmqService>(RmqService)
   app.connectMicroservice<RmqOptions>(rmqService.getOptions('AUTH'))
   app.useGlobalPipes(new ValidationPipe())

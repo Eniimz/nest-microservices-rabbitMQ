@@ -15,8 +15,6 @@ export class jwtGuard implements CanActivate {
 
         const authentication = this.getAuthentication(context)
 
-        
-
         this.logger.log("Now validating the user...")
         return this.authClient.send('validate_user', {
             Authentication: authentication
@@ -31,9 +29,6 @@ export class jwtGuard implements CanActivate {
                 throw new UnauthorizedException()
             })
         )
-        
-
-        
 
     }
     
@@ -43,6 +38,7 @@ export class jwtGuard implements CanActivate {
         let authentication: string | null = null
 
         if(context.getType() === 'http'){
+            
             authentication = context.switchToHttp().getRequest().cookies?.Authentication
         }else if (context.getType() === 'rpc') {
             authentication = context.switchToRpc().getData().Authentication
@@ -51,7 +47,7 @@ export class jwtGuard implements CanActivate {
         this.logger.log("This is the authentication to be sent: ", authentication)  
 
         if(!authentication){
-            throw new UnauthorizedException('Now value was proided for authentication')
+            throw new UnauthorizedException('No value was provided for authentication')
         }
 
         return authentication
