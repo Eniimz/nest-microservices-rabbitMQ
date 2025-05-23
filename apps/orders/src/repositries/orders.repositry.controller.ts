@@ -1,5 +1,5 @@
 import { AbstractRepositry } from "@app/common";
-import { Order } from "./schemas/order.schema";
+import { Order } from "../schemas/order.schema";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { Connection, Model } from "mongoose";

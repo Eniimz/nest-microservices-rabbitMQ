@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { UserRole } from "../schemas/user.schema";
 
 
 export class CreateUserRequest {
@@ -9,5 +10,9 @@ export class CreateUserRequest {
     @IsString()
     @IsNotEmpty()
     password: string
+
+    @IsEnum(UserRole)
+    @IsOptional()
+    role ?: UserRole
 
 }

@@ -15,6 +15,6 @@ async function bootstrap() {
   const configService = app.get(ConfigService)
 
   await app.startAllMicroservices()
-  await app.listen(process.env.port ?? 5000);
+  await app.listen(5000);
 }
 bootstrap();

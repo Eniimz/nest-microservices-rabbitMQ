@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Post, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Logger, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CurrentUser } from '../current-user.decorator';
 import { User } from './users/schemas/user.schema';
@@ -18,21 +18,29 @@ export class AuthController {
   @Post('login')
   async login(
     @CurrentUser() user: User,
-    @Res({ passthrough: true }) response: Response//passthrough: true => gives us the usual nestjs response structure
+    @Res({ passthrough: true }) response: Response, //passthrough: true => gives us the usual nestjs response structure
+    @Req() req: any,
   ) {
+    this.logger.log("User logged in successfully: ", req.user)
     await this.authService.login(user, response);
+    
     response.send(user)
   }
 
   @Get()
-  testCheck() {
-    return "working in auth controller"
+  testCheck(@Req() req: any) {
+    try{
+      this.logger.log("Auth controller is working: ", req.user)
+      return "working in auth controller"
+    } catch(err) {
+        this.logger.log("Error in auth controller", err)
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @MessagePattern('validate_user')
-  async validateUser(data: any) {
+  async validateUser(@CurrentUser() user: User) {
     this.logger.log("Received the message, for validating, now validating")
-    return data
+    return user
   }
 }

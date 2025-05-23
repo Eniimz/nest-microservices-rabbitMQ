@@ -3,6 +3,8 @@ import { User } from './users/schemas/user.schema';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
+import { sesClient } from 'apps/notification/src/ses.config';
+import { IdentityType, ListIdentitiesCommand, VerifyEmailIdentityCommand } from '@aws-sdk/client-ses';
 
 interface TokenPayload {
   userId: string
@@ -20,7 +22,9 @@ export class AuthService { // in login here, we set the token in the cookie of t
     return 'Hello World!';
   }
 
-  login(user: User, response: Response) {
+  async login(user: User, response: Response) {
+
+    const { email, password } = user;
 
     const tokenPayload: TokenPayload = {
       userId: user._id.toHexString()

@@ -1,5 +1,89 @@
 
 services:
+  orders:
+    build: 
+      context: .
+      dockerfile: ./apps/orders/Dockerfile
+      target: development
+    command: npm run start:dev orders
+    env_file:
+      - ./apps/orders/.env
+    depends_on:
+      - rabbitmq
+      - billing
+      - auth
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "4000:4000"  # Orders service
+  
+  billing:
+    build:
+      context: .
+      dockerfile: ./apps/billing/Dockerfile
+      target: development
+    command: npm run start:dev billing
+    env_file:
+      - ./apps/billing/.env
+    depends_on:
+      - rabbitmq
+      - auth
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: npm run start:dev auth
+    env_file:
+      - ./apps/auth/.env
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "5000:5000"
+
+  
+  notification:
+    build:
+      context: .
+      dockerfile: ./apps/notification/Dockerfile
+      target: development
+    command: npm run start:dev notification
+    env_file:
+      - ./apps/notification/.env
+    depends_on:
+      - rabbitmq
+      - redis
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    
+  menu:
+    build:
+      context: .
+      dockerfile: ./apps/menu/Dockerfile
+      target: development
+    command: npm run start:dev menu
+    env_file:
+      - ./apps/menu/.env
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"  
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"  
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -9,3 +93,4 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+

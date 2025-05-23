@@ -1,7 +1,7 @@
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from 'passport-local'
 import { UsersService } from "../users/users.service";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -10,7 +10,11 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         super({ usernameField: 'email' })
     }
 
+    private readonly logger = new Logger(LocalStrategy.name)
+
     validate(email: string, password: string) {
+        
+        this.logger.log(`Validating user with email: ${email} and password: ${password}`)
         return this.usersService.validateUser(email, password)
     }
 

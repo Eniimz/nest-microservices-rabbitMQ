@@ -59,4 +59,56 @@ export abstract class AbstractRepositry<TDocument extends AbstractDocument> {
 
     }
 
+    async findByIdAndUpdate(
+        filterQuery: FilterQuery<TDocument>,
+        update: UpdateQuery<TDocument>
+    ): Promise<TDocument> {
+        const foundDocument = await this.model.findByIdAndUpdate(filterQuery, update, {
+            lean: true,
+            new: true
+        })
+
+        if(!foundDocument){
+            this.logger.warn('Document not found with the filter query: ', filterQuery)
+            throw new NotFoundException('Document not found')
+        }
+
+        return foundDocument as unknown as TDocument
+
+    }
+
+    async findAll(
+        filterQuery: FilterQuery<TDocument> = {},
+        options: {
+            skip?: number;
+            limit?: number;
+            sort?: Record<string, 1 | -1>;
+            projection?: Record<string, 0 | 1 | boolean>;
+        } = {}
+    ): Promise<TDocument[]> {   
+        const query = this.model.find(filterQuery, options.projection || {}, { lean: true });
+
+        if (options.skip) {
+            query.skip(options.skip);
+        }
+
+        if (options.limit) {
+            query.limit(options.limit);
+        }
+
+        if (options.sort) {
+            query.sort(options.sort);
+        }
+
+        const documents = await query.exec();
+        
+        if (!documents || documents.length === 0) {
+            this.logger.warn('No documents found with filterQuery', filterQuery);
+            return [];
+        }
+
+        return documents as unknown as TDocument[];
+    }
+    
+
 }

@@ -3,11 +3,14 @@ import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
 import { BullModule } from "@nestjs/bullmq"
 import { RmqModule } from '@app/common/rmq/rmq.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { join } from 'path';
 import { NotificationProcessor } from './notification.processor';
 import { NOTIFICATION_SERVICE } from './constants/services';
+import { TwilioModule } from 'nestjs-twilio';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { MailService } from './mail.service';
 
 @Module({
   imports: [
@@ -19,9 +22,20 @@ import { NOTIFICATION_SERVICE } from './constants/services';
         }),
         envFilePath: './apps/notification/.env'
     }),
+    MailerModule.forRoot({
+          transport: {
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            auth: {
+              user: 'cynilv2@gmail.com',
+              pass: 'igvv duzp tbqu ozmk'
+            }
+          }
+        }),
     BullModule.forRoot({
       connection: {
-        host: 'localhost',
+        host: 'redis',
         port: 6379
       },
     }),
@@ -32,7 +46,7 @@ import { NOTIFICATION_SERVICE } from './constants/services';
     RmqModule.register({ name: NOTIFICATION_SERVICE })
   ],
   controllers: [NotificationController],
-  providers: [NotificationService, NotificationProcessor],
+  providers: [NotificationService, NotificationProcessor, MailService],
 })
 export class NotificationModule {
   constructor(){

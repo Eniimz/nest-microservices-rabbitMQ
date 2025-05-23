@@ -37,6 +37,15 @@
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
     },
+    "menu": {
+      "type": "application",
+      "root": "apps/menu",
+      "entryFile": "main",
+      "sourceRoot": "apps/menu/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/menu/tsconfig.app.json"
+      }
+    },
     "notification": {
       "type": "application",
       "root": "apps/notification",

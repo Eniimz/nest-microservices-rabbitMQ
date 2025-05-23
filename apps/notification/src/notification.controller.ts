@@ -17,19 +17,31 @@ export class NotificationController {
     return this.notificationService.getHello();
   }
 
-  @Post()
-  async process(@Body() data: { name: string, price: string, phoneNumber: string}){
-    this.logger.log("Received the order_placed http req data in notifications service: ", data)
+  // @Post()
+  // async process(@Body() data: { name: string, price: string, phoneNumber: string}){
+  //   this.logger.log("Received the order_placed http req data in notifications service: ", data)
     
-    await this.notificationService.handleOrderPlaced(data)
+  //   await this.notificationService.handleOrderPlaced(data)
+  // }
+
+  @Get('queue-stats')
+  getQueueStats() {
+    return this.notificationService.getQueueStats();
   }
 
   @EventPattern('order_placed')
   async handleOrderPlaced(@Payload() data: any, @Ctx() context: RmqContext) {
     this.logger.log("Received the order_placed event in notifications service: ", data.orderData)
     
-    await this.notificationService.handleOrderPlaced(data.orderData)
+    // data: orderData: { name: string, price: string, phoneNumber: string}, message, 
+    console.log("The email to be added to the queue: ", data.email)
+    await this.notificationService.handleOrderPlaced(data.orderData, data.email)
     this.rmqService.ack(context)
+  }
+
+  @Get('reset-queue')
+  resetQueue() {
+    return this.notificationService.resetQueue();
   }
 
   //had alot of trouble here as the EventPattern was not being triggered
