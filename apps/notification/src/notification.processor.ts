@@ -1,7 +1,7 @@
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Job } from 'bullmq';
-import { sesClient } from './ses.config';
+// import { sesClient } from './ses.config';
 import { SendEmailCommand } from '@aws-sdk/client-ses';
 import { MailService } from './mail.service';
 
@@ -11,7 +11,7 @@ import { MailService } from './mail.service';
 export class NotificationProcessor extends WorkerHost {
   
   private readonly logger = new Logger(NotificationProcessor.name);
-  private ses = sesClient
+  // private ses = sesClient
 
   constructor(
     private readonly mailService: MailService
